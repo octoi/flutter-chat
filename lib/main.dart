@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterchat/screens/auth_screen.dart';
@@ -30,10 +31,20 @@ class FlutterChat extends StatelessWidget {
       ),
       home: FutureBuilder(
         future: Firebase.initializeApp(),
-        builder: (ctx, snapshot) =>
-            snapshot.connectionState == ConnectionState.waiting
-                ? Scaffold(body: Center(child: CircularProgressIndicator()))
-                : AuthScreen(),
+        builder: (ctx, snapshot) => snapshot.connectionState ==
+                ConnectionState.waiting
+            ? Scaffold(body: Center(child: CircularProgressIndicator()))
+            : StreamBuilder(
+                stream: FirebaseAuth.instance.authStateChanges(),
+                builder: (context, userSnapshot) {
+                  if (userSnapshot.connectionState == ConnectionState.waiting) {
+                    return Scaffold(
+                      body: Center(child: CircularProgressIndicator()),
+                    );
+                  }
+                  return userSnapshot.hasData ? ChatScreen() : AuthScreen();
+                },
+              ),
       ),
     );
   }
