@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,6 +13,7 @@ class AuthScreen extends StatefulWidget {
 
 class _AuthScreenState extends State<AuthScreen> {
   final _auth = FirebaseAuth.instance;
+  var _isLoading = false;
 
   void _submitAuthForm(
     String email,
@@ -20,6 +22,8 @@ class _AuthScreenState extends State<AuthScreen> {
     bool isLogin,
     BuildContext context,
   ) async {
+    setState(() => _isLoading = true);
+
     UserCredential authResult;
     try {
       if (isLogin) {
@@ -32,6 +36,13 @@ class _AuthScreenState extends State<AuthScreen> {
           email: email,
           password: password,
         );
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(authResult.user!.uid)
+            .set({
+          'username': username,
+          'email': email,
+        });
       }
     } on PlatformException catch (err) {
       var message = 'An error occurred, please check your credentials!';
@@ -40,12 +51,14 @@ class _AuthScreenState extends State<AuthScreen> {
         message = err.message.toString();
       }
 
+      setState(() => _isLoading = false);
       Scaffold.of(context).showSnackBar(SnackBar(
         content: Text(message),
         backgroundColor: Theme.of(context).errorColor,
       ));
     } catch (err) {
       print(err);
+      setState(() => _isLoading = false);
       Scaffold.of(context).showSnackBar(SnackBar(
         content: Text('Oops something went wrong !!'),
         backgroundColor: Theme.of(context).errorColor,
@@ -57,7 +70,7 @@ class _AuthScreenState extends State<AuthScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
-      body: AuthForm(_submitAuthForm),
+      body: AuthForm(_submitAuthForm, _isLoading),
     );
   }
 }

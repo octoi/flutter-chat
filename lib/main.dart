@@ -20,7 +20,6 @@ class FlutterChat extends StatelessWidget {
         backgroundColor: Colors.pink,
         accentColor: Colors.deepPurple,
         accentColorBrightness: Brightness.dark,
-        errorColor: Colors.deepOrangeAccent,
         buttonTheme: ButtonTheme.of(context).copyWith(
           buttonColor: Colors.pink,
           textTheme: ButtonTextTheme.primary,
