@@ -20,6 +20,7 @@ class FlutterChat extends StatelessWidget {
         backgroundColor: Colors.pink,
         accentColor: Colors.deepPurple,
         accentColorBrightness: Brightness.dark,
+        errorColor: Colors.deepOrangeAccent,
         buttonTheme: ButtonTheme.of(context).copyWith(
           buttonColor: Colors.pink,
           textTheme: ButtonTextTheme.primary,
@@ -30,7 +31,10 @@ class FlutterChat extends StatelessWidget {
       ),
       home: FutureBuilder(
         future: Firebase.initializeApp(),
-        builder: (ctx, snapshot) => AuthScreen(),
+        builder: (ctx, snapshot) =>
+            snapshot.connectionState == ConnectionState.waiting
+                ? Scaffold(body: Center(child: CircularProgressIndicator()))
+                : AuthScreen(),
       ),
     );
   }
