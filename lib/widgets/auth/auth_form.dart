@@ -52,7 +52,7 @@ class _AuthFormState extends State<AuthForm> {
       _userEmail.trim(),
       _userPassword,
       _userName.trim(),
-      File(_userImageFile!.path),
+      File(_userImageFile != null ? _userImageFile!.path : ''),
       _isLogin,
       context,
     );
