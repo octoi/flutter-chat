@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterchat/screens/auth_screen.dart';
 import 'package:flutterchat/screens/chat_screen.dart';
 
 void main() {
@@ -19,7 +20,7 @@ class FlutterChat extends StatelessWidget {
       ),
       home: FutureBuilder(
         future: Firebase.initializeApp(),
-        builder: (ctx, snapshot) => ChatScreen(),
+        builder: (ctx, snapshot) => AuthScreen(),
       ),
     );
   }
